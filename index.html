@@ -161,10 +161,10 @@ nav.scrolled { background: rgba(6,10,6,0.97); padding-top: 14px; padding-bottom:
 
 /* Mobile menu */
 .mobile-menu {
-  display: none; position: fixed; inset: 0; z-index: 300;
-  background: rgba(6,10,6,0.98); flex-direction: column;
+  display: none; position: fixed; inset: 0; z-index: 9000;
+  background: rgba(6,10,6,0.99);
+  flex-direction: column;
   align-items: center; justify-content: center; gap: 40px;
-  backdrop-filter: blur(16px);
 }
 .mobile-menu.open { display: flex; }
 .mobile-menu a {
@@ -178,7 +178,17 @@ nav.scrolled { background: rgba(6,10,6,0.97); padding-top: 14px; padding-bottom:
   background: none; border: none; color: var(--muted);
   font-size: 1.5rem; cursor: pointer; padding: 8px;
 }
-.mobile-menu-close:hover { color: var(--white); }
+.mobile-menu-logo {
+  display: flex; align-items: center; gap: 14px; margin-bottom: 8px;
+}
+.mobile-menu-cta {
+  margin-top: 12px;
+  background: var(--green); color: var(--black) !important;
+  padding: 14px 36px; border-radius: var(--radius);
+  font-family: var(--font-display) !important; font-weight: 700 !important;
+  font-size: 0.95rem !important; letter-spacing: 0.06em;
+}
+.mobile-menu-cta:hover { opacity: 0.88; color: var(--black) !important; }
 
 /* ══════════════════════════════════
    CURSOR PERSONALIZADO
@@ -910,14 +920,27 @@ footer {
 
 <a href="#main" class="skip-link">Pular para o conteúdo</a>
 
-<!-- MOBILE MENU -->
+<!-- MOBILE MENU (renderizado no final do DOM para garantir z-index correto) -->
 <div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Menu de navegação">
   <button class="mobile-menu-close" onclick="closeMobileMenu()" aria-label="Fechar menu">✕</button>
+  <div class="mobile-menu-logo">
+    <div class="logo-icon" style="width:48px;height:48px;">
+      <svg viewBox="0 0 44 44" fill="none" style="width:40px;height:40px;" aria-hidden="true">
+        <circle cx="22" cy="22" r="22" fill="white"/>
+        <path d="M12 8 L12 36 L17 36 L17 26 C17 26 30 27 30 17 C30 8 17 8 17 8 Z" fill="#00CC33"/>
+        <path d="M17 13 L17 22 C17 22 25 22 25 17.5 C25 13 17 13 17 13 Z" fill="white"/>
+        <path d="M14 11 L14 33 L18 33 L18 24 C18 24 28 25 28 18 C28 11 18 11 18 11 Z" fill="#333"/>
+        <path d="M18 15 L18 21 C18 21 24 21 24 18 C24 15 18 15 18 15 Z" fill="white"/>
+      </svg>
+    </div>
+    <span class="logo-text" style="font-size:1.2rem;">PIXEL <span>PRO</span></span>
+  </div>
   <a href="#services" onclick="closeMobileMenu()">Serviços</a>
   <a href="#process" onclick="closeMobileMenu()">Processo</a>
   <a href="#portfolio" onclick="closeMobileMenu()">Portfólio</a>
   <a href="#about" onclick="closeMobileMenu()">Sobre</a>
   <a href="#contact" onclick="closeMobileMenu()">Contato</a>
+  <a href="https://wa.me/5519999979782" target="_blank" rel="noopener" class="mobile-menu-cta" onclick="closeMobileMenu()">Fale no WhatsApp →</a>
 </div>
 
 <!-- NAV -->
@@ -1511,10 +1534,7 @@ function quickReply(topic) {
   window.open(`https://wa.me/${waNumber}?text=${msg}`, '_blank');
 }
 
-// Auto-open after 6s
-setTimeout(() => {
-  if (!chatOpen) { chatOpen = true; waChat.classList.add('open'); waBadge.style.display = 'none'; startChat(); }
-}, 6000);
+// Chat abre apenas ao clicar no botão
 
 /* ═══════════════════════════════════
    FORMULÁRIO → WHATSAPP
@@ -1637,5 +1657,28 @@ document.getElementById('telefone').addEventListener('input', function() {
   this.value = v;
 });
 </script>
+<!-- MOBILE MENU (renderizado no final do DOM para garantir z-index correto) -->
+<div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Menu de navegação">
+  <button class="mobile-menu-close" onclick="closeMobileMenu()" aria-label="Fechar menu">✕</button>
+  <div class="mobile-menu-logo">
+    <div class="logo-icon" style="width:48px;height:48px;">
+      <svg viewBox="0 0 44 44" fill="none" style="width:40px;height:40px;" aria-hidden="true">
+        <circle cx="22" cy="22" r="22" fill="white"/>
+        <path d="M12 8 L12 36 L17 36 L17 26 C17 26 30 27 30 17 C30 8 17 8 17 8 Z" fill="#00CC33"/>
+        <path d="M17 13 L17 22 C17 22 25 22 25 17.5 C25 13 17 13 17 13 Z" fill="white"/>
+        <path d="M14 11 L14 33 L18 33 L18 24 C18 24 28 25 28 18 C28 11 18 11 18 11 Z" fill="#333"/>
+        <path d="M18 15 L18 21 C18 21 24 21 24 18 C24 15 18 15 18 15 Z" fill="white"/>
+      </svg>
+    </div>
+    <span class="logo-text" style="font-size:1.2rem;">PIXEL <span>PRO</span></span>
+  </div>
+  <a href="#services" onclick="closeMobileMenu()">Serviços</a>
+  <a href="#process" onclick="closeMobileMenu()">Processo</a>
+  <a href="#portfolio" onclick="closeMobileMenu()">Portfólio</a>
+  <a href="#about" onclick="closeMobileMenu()">Sobre</a>
+  <a href="#contact" onclick="closeMobileMenu()">Contato</a>
+  <a href="https://wa.me/5519999979782" target="_blank" rel="noopener" class="mobile-menu-cta" onclick="closeMobileMenu()">Fale no WhatsApp →</a>
+</div>
+
 </body>
 </html>
