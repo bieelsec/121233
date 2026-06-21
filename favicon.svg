@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44">
+  <circle cx="22" cy="22" r="22" fill="white"/>
+  <path d="M12 8 L12 36 L17 36 L17 26 C17 26 30 27 30 17 C30 8 17 8 17 8 Z" fill="#00CC33"/>
+  <path d="M17 13 L17 22 C17 22 25 22 25 17.5 C25 13 17 13 17 13 Z" fill="white"/>
+  <path d="M14 11 L14 33 L18 33 L18 24 C18 24 28 25 28 18 C28 11 18 11 18 11 Z" fill="#333"/>
+  <path d="M18 15 L18 21 C18 21 24 21 24 18 C24 15 18 15 18 15 Z" fill="#222"/>
+  <text x="22" y="40.5" text-anchor="middle" font-family="Arial" font-weight="700" font-size="4.5" fill="#222" letter-spacing="0.8">PIXEL PRO</text>
+</svg>
