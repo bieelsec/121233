@@ -161,9 +161,10 @@ nav.scrolled { background: rgba(6,10,6,0.97); padding-top: 14px; padding-bottom:
 
 /* Mobile menu */
 .mobile-menu {
-  display: none; position: fixed; inset: 0; z-index: 190;
-  background: rgba(6,10,6,0.97); flex-direction: column;
+  display: none; position: fixed; inset: 0; z-index: 300;
+  background: rgba(6,10,6,0.98); flex-direction: column;
   align-items: center; justify-content: center; gap: 40px;
+  backdrop-filter: blur(16px);
 }
 .mobile-menu.open { display: flex; }
 .mobile-menu a {
@@ -178,6 +179,37 @@ nav.scrolled { background: rgba(6,10,6,0.97); padding-top: 14px; padding-bottom:
   font-size: 1.5rem; cursor: pointer; padding: 8px;
 }
 .mobile-menu-close:hover { color: var(--white); }
+
+/* ══════════════════════════════════
+   CURSOR PERSONALIZADO
+══════════════════════════════════ */
+body { cursor: none; }
+@media (pointer: coarse) { body { cursor: auto; } }
+
+#cursor-dot {
+  position: fixed; pointer-events: none; z-index: 9999;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--green);
+  transform: translate(-50%, -50%);
+  transition: transform 0.08s ease, width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
+  box-shadow: 0 0 10px rgba(0,255,65,0.8);
+}
+#cursor-ring {
+  position: fixed; pointer-events: none; z-index: 9998;
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1.5px solid rgba(0,255,65,0.5);
+  transform: translate(-50%, -50%);
+  transition: transform 0.18s ease, width 0.25s ease, height 0.25s ease, opacity 0.25s ease, border-color 0.25s ease;
+}
+body.cursor-hover #cursor-dot {
+  width: 12px; height: 12px;
+  background: var(--green);
+  box-shadow: 0 0 18px rgba(0,255,65,1);
+}
+body.cursor-hover #cursor-ring {
+  width: 52px; height: 52px;
+  border-color: rgba(0,255,65,0.8);
+}
 
 /* ══════════════════════════════════
    HERO
@@ -872,6 +904,10 @@ footer {
 </head>
 <body>
 
+<!-- CURSOR -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
 <a href="#main" class="skip-link">Pular para o conteúdo</a>
 
 <!-- MOBILE MENU -->
@@ -939,19 +975,19 @@ footer {
 
   <div class="hero-stats" role="list" aria-label="Números da Pixel Pro">
     <div class="stat" role="listitem">
-      <div class="stat-num">30<span>+</span></div>
+      <div class="stat-num" data-target="30" data-suffix="+">0<span>+</span></div>
       <div class="stat-label">Projetos entregues</div>
     </div>
     <div class="stat" role="listitem">
-      <div class="stat-num">100<span>%</span></div>
+      <div class="stat-num" data-target="100" data-suffix="%">0<span>%</span></div>
       <div class="stat-label">Clientes satisfeitos</div>
     </div>
     <div class="stat" role="listitem">
-      <div class="stat-num">2<span>+</span></div>
+      <div class="stat-num" data-target="2" data-suffix="+">0<span>+</span></div>
       <div class="stat-label">Anos de mercado</div>
     </div>
     <div class="stat" role="listitem">
-      <div class="stat-num">24<span>h</span></div>
+      <div class="stat-num" data-target="24" data-suffix="h">0<span>h</span></div>
       <div class="stat-label">Suporte disponível</div>
     </div>
   </div>
@@ -1512,7 +1548,86 @@ function enviarOrcamento(e) {
   window.open(`https://wa.me/5519999979782?text=${encodeURIComponent(texto)}`, '_blank');
 }
 
-/* Phone mask */
+/* ═══════════════════════════════════
+   CURSOR PERSONALIZADO
+═══════════════════════════════════ */
+(function() {
+  const dot  = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+  if (!dot || !ring) return;
+
+  // Hide on touch devices
+  if (window.matchMedia('(pointer: coarse)').matches) {
+    dot.style.display = 'none'; ring.style.display = 'none'; return;
+  }
+
+  let mx = -100, my = -100, rx = -100, ry = -100;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px';
+    dot.style.top  = my + 'px';
+  }, { passive: true });
+
+  // Ring follows with lerp
+  (function lerp() {
+    rx += (mx - rx) * 0.14;
+    ry += (my - ry) * 0.14;
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+    requestAnimationFrame(lerp);
+  })();
+
+  // Hover state on interactive elements
+  const hoverEls = 'a, button, .service-card, .portfolio-card, .about-feature, .wa-quick-btn, input, select, textarea';
+  document.querySelectorAll(hoverEls).forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+  });
+
+  // Hide when leaving window
+  document.addEventListener('mouseleave', () => { dot.style.opacity='0'; ring.style.opacity='0'; });
+  document.addEventListener('mouseenter', () => { dot.style.opacity='1'; ring.style.opacity='1'; });
+})();
+
+/* ═══════════════════════════════════
+   CONTADOR ANIMADO NOS STATS
+═══════════════════════════════════ */
+(function() {
+  const statsSection = document.querySelector('.hero-stats');
+  if (!statsSection) return;
+
+  let counted = false;
+
+  function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
+
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.target, 10);
+    const suffix = el.dataset.suffix || '';
+    const duration = 1400;
+    const start = performance.now();
+
+    function step(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const value = Math.round(easeOutQuart(progress) * target);
+      el.innerHTML = value + '<span>' + suffix + '</span>';
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  const statsObserver = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting && !counted) {
+      counted = true;
+      document.querySelectorAll('.stat-num[data-target]').forEach(animateCounter);
+      statsObserver.disconnect();
+    }
+  }, { threshold: 0.5 });
+
+  statsObserver.observe(statsSection);
+})();
+
 document.getElementById('telefone').addEventListener('input', function() {
   let v = this.value.replace(/\D/g, '');
   if (v.length > 11) v = v.slice(0, 11);
