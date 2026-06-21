@@ -101,6 +101,10 @@ nav {
   border-bottom: 1px solid var(--border);
   transition: background var(--transition), padding var(--transition);
 }
+
+.nav-right {
+  display: flex; align-items: center; gap: 36px;
+}
 nav.scrolled { background: rgba(6,10,6,0.97); padding-top: 14px; padding-bottom: 14px; }
 
 .nav-logo {
@@ -124,7 +128,7 @@ nav.scrolled { background: rgba(6,10,6,0.97); padding-top: 14px; padding-bottom:
 }
 .logo-text span { color: var(--green); }
 
-.nav-links { display: flex; gap: 36px; list-style: none; }
+.nav-links { display: flex; gap: 36px; list-style: none; flex-shrink: 0; }
 .nav-links a {
   color: var(--muted); text-decoration: none;
   font-size: 0.875rem; letter-spacing: 0.06em;
@@ -145,7 +149,7 @@ nav.scrolled { background: rgba(6,10,6,0.97); padding-top: 14px; padding-bottom:
   font-family: var(--font-display); font-weight: 600;
   font-size: 0.83rem; letter-spacing: 0.08em;
   cursor: pointer; transition: background var(--transition), color var(--transition), box-shadow var(--transition);
-  white-space: nowrap;
+  white-space: nowrap; flex-shrink: 0;
 }
 .nav-cta:hover {
   background: var(--green); color: var(--black);
@@ -872,6 +876,7 @@ footer {
   nav { padding: 14px 24px; }
   .nav-links, .nav-cta { display: none; }
   .nav-hamburger { display: flex; align-items: center; justify-content: center; }
+  .nav-right { gap: 0; }
 
   .hero { padding: 120px 24px 80px; }
   .hero-stats { gap: 0; }
@@ -920,29 +925,6 @@ footer {
 
 <a href="#main" class="skip-link">Pular para o conteúdo</a>
 
-<!-- MOBILE MENU (renderizado no final do DOM para garantir z-index correto) -->
-<div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Menu de navegação">
-  <button class="mobile-menu-close" onclick="closeMobileMenu()" aria-label="Fechar menu">✕</button>
-  <div class="mobile-menu-logo">
-    <div class="logo-icon" style="width:48px;height:48px;">
-      <svg viewBox="0 0 44 44" fill="none" style="width:40px;height:40px;" aria-hidden="true">
-        <circle cx="22" cy="22" r="22" fill="white"/>
-        <path d="M12 8 L12 36 L17 36 L17 26 C17 26 30 27 30 17 C30 8 17 8 17 8 Z" fill="#00CC33"/>
-        <path d="M17 13 L17 22 C17 22 25 22 25 17.5 C25 13 17 13 17 13 Z" fill="white"/>
-        <path d="M14 11 L14 33 L18 33 L18 24 C18 24 28 25 28 18 C28 11 18 11 18 11 Z" fill="#333"/>
-        <path d="M18 15 L18 21 C18 21 24 21 24 18 C24 15 18 15 18 15 Z" fill="white"/>
-      </svg>
-    </div>
-    <span class="logo-text" style="font-size:1.2rem;">PIXEL <span>PRO</span></span>
-  </div>
-  <a href="#services" onclick="closeMobileMenu()">Serviços</a>
-  <a href="#process" onclick="closeMobileMenu()">Processo</a>
-  <a href="#portfolio" onclick="closeMobileMenu()">Portfólio</a>
-  <a href="#about" onclick="closeMobileMenu()">Sobre</a>
-  <a href="#contact" onclick="closeMobileMenu()">Contato</a>
-  <a href="https://wa.me/5519999979782" target="_blank" rel="noopener" class="mobile-menu-cta" onclick="closeMobileMenu()">Fale no WhatsApp →</a>
-</div>
-
 <!-- NAV -->
 <nav id="mainNav" role="navigation" aria-label="Navegação principal">
   <a href="#" class="nav-logo" aria-label="Pixel Pro — Início">
@@ -957,19 +939,21 @@ footer {
     </div>
     <span class="logo-text">PIXEL <span>PRO</span></span>
   </a>
-  <ul class="nav-links">
-    <li><a href="#services">Serviços</a></li>
-    <li><a href="#process">Processo</a></li>
-    <li><a href="#portfolio">Portfólio</a></li>
-    <li><a href="#about">Sobre</a></li>
-    <li><a href="#contact">Contato</a></li>
-  </ul>
-  <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Fale Conosco</button>
-  <button class="nav-hamburger" id="hamburger" onclick="openMobileMenu()" aria-label="Abrir menu" aria-expanded="false">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-    </svg>
-  </button>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#services">Serviços</a></li>
+      <li><a href="#process">Processo</a></li>
+      <li><a href="#portfolio">Portfólio</a></li>
+      <li><a href="#about">Sobre</a></li>
+      <li><a href="#contact">Contato</a></li>
+    </ul>
+    <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Fale Conosco</button>
+    <button class="nav-hamburger" id="hamburger" onclick="openMobileMenu()" aria-label="Abrir menu" aria-expanded="false">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+  </div>
 </nav>
 
 <!-- HERO -->
